@@ -1,2 +1,6 @@
 __pycache__/
 ss.png
+.idea/**
+.venv/**
+target-bak.png
+target-big.png
