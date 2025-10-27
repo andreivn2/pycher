@@ -5,6 +5,7 @@ import random
 import argparse
 
 import pyautogui
+import pygetwindow as gw
 import sounddevice as sd
 import numpy as np
 from datetime import datetime, timedelta
@@ -59,7 +60,7 @@ def main():
     screenshot.save('ss.png')
 
     if not args.no_alt_tab:
-        os.system("osascript -e 'tell application \"System Events\" to key code 48 using {command down}'")
+        focus_last_win()
 
     coords, confidence = find_target_coordinates()
     tarx, tary = coords
@@ -96,9 +97,18 @@ def random_sleep(min, max):
 
 def focus_game():
     if os.name == 'nt':
-        return
+        win = gw.getWindowsWithTitle("World of Warcraft")[0]
+        win.activate()
     elif os.name == 'posix':
         os.system("osascript -e 'tell application \"Moonlight\" to activate'")
+
+def focus_last_win():
+    if os.name == 'nt':
+        pyautogui.keyDown('alt')
+        pyautogui.press('tab')
+        pyautogui.keyUp('alt')
+    elif os.name == 'posix':
+        os.system("osascript -e 'tell application \"System Events\" to key code 48 using {command down}'")
 
 if __name__ == "__main__":
     start_time = datetime.now() + timedelta(minutes=args.start)
