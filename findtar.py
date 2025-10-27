@@ -8,8 +8,8 @@ def find_target_coordinates(threshold=0.7):
     template_path = os.path.join(script_dir, "target.png")
     capture_path = os.path.join(script_dir, "ss.png")
 
-    img_rgb = cv2.imread(capture_path, cv2.IMREAD_GRAYSCALE)
-    template_orig = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
+    img_rgb = cv2.imread(capture_path, cv2.IMREAD_UNCHANGED)
+    template_orig = cv2.imread(template_path, cv2.IMREAD_UNCHANGED)
 
     if img_rgb is None or template_orig is None:
         print("Error loading images.")
@@ -19,7 +19,7 @@ def find_target_coordinates(threshold=0.7):
     best_pt = None
     best_scale = 1.0
 
-    scales = np.linspace(0.75, 1.25, 20)  # Try 20 scales from 50% to 150%
+    scales = np.linspace(0.4, 1.25, 5)  # Try 20 scales from 50% to 150%
 
     for scale in scales:
         # Resize template
@@ -36,7 +36,6 @@ def find_target_coordinates(threshold=0.7):
         if max_val > best_val:
             best_val = max_val
             best_pt = (max_loc[0] + w // 2, max_loc[1] + h // 2)
-            best_match = template
             best_scale = scale
 
     print(f"Target found at: {best_pt} (scale: {best_scale:.2f}, confidence: {best_val:.2f})")
